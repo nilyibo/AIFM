@@ -22,6 +22,10 @@ elif lspci | grep -q 'ConnectX-3'; then
     sed -i 's/CONFIG_RTE_LIBRTE_MLX4_PMD=n/CONFIG_RTE_LIBRTE_MLX4_PMD=y/g' dpdk/config/common_base
 fi
 
+# patch for Linux kernel 5.3+ falls through behavior
+# Source: https://inbox.dpdk.org/stable/20190729123216.64601-1-ferruh.yigit@intel.com/T/
+patch -p 1 -d dpdk/ < falls_through.patch
+
 # Configure/compile dpdk
 make -C dpdk/ config T=x86_64-native-linuxapp-gcc
 make -C dpdk/ -j
